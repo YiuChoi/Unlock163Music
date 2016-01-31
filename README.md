@@ -1,6 +1,6 @@
 # Unblock163MusicClient - Xposed
 
-Xposed version of EraserKing's [Unblock163MusicClient](https://github.com/EraserKing/Unblock163MusicClient).
+Xposed version of bin456789's [Unblock163MusicClient](https://github.com/bin456789/Unblock163MusicClient-Xposed).
 
 Compatible with the v3.2.1 app.
 
@@ -9,6 +9,4 @@ No apks here. Just build it yourself.
 
 ## Thanks
 
-Thanks EraserKing for his Original Windows version [https://github.com/EraserKing/Unblock163MusicClient]
-
-Thanks yanunon for his API analysis! [https://github.com/yanunon/NeteaseCloudMusic]
+Thanks bin456789 for his source code [https://github.com/bin456789/Unblock163MusicClient-Xposed]

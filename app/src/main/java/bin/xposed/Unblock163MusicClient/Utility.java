@@ -42,8 +42,10 @@ final class Utility {
 
     public static boolean Init(ClassLoader classLoader) throws NoSuchFieldException {
         CLASS_utils_NeteaseMusicUtils = XposedHelpers.findClass("com.netease.cloudmusic.utils.NeteaseMusicUtils", classLoader);
-        CONSTRUCTOR_i_f = findConstructorExact(findClass("com.netease.cloudmusic.i.f", classLoader), String.class, Map.class);
-        FIELD_utils_c = findClass("com.netease.cloudmusic.utils.u", classLoader).getDeclaredField("c");
+        //CONSTRUCTOR_i_f = findConstructorExact(findClass("com.netease.cloudmusic.i.f", classLoader), String.class, Map.class);
+        CONSTRUCTOR_i_f = findConstructorExact(findClass("com.netease.cloudmusic.i.b", classLoader), String.class, Map.class);
+        //FIELD_utils_c = findClass("com.netease.cloudmusic.utils.u", classLoader).getDeclaredField("c");
+        FIELD_utils_c = findClass("com.netease.cloudmusic.utils.n", classLoader).getDeclaredField("c");
         FIELD_utils_c.setAccessible(true);
         return true;
     }

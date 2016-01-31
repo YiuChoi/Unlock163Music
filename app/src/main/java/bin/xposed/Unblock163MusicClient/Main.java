@@ -13,7 +13,8 @@ public class Main implements IXposedHookLoadPackage {
         if (lpparam.packageName.equals("com.netease.cloudmusic")) {
             Utility.Init(lpparam.classLoader);
 
-            findAndHookMethod("com.netease.cloudmusic.utils.u", lpparam.classLoader,
+            //findAndHookMethod("com.netease.cloudmusic.utils.u", lpparam.classLoader,
+            findAndHookMethod("com.netease.cloudmusic.utils.n", lpparam.classLoader,
                     "i", new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) throws Exception {

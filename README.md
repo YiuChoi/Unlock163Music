@@ -1,8 +1,6 @@
 # Unblock163MusicClient - Xposed
 
-Xposed version of bin456789's [Unblock163MusicClient](https://github.com/bin456789/Unblock163MusicClient-Xposed).
-
-Compatible with the v3.2.1 app.
+Compatible with the v3.3.0,3.2.1,3.1.4,3.1.3 app.
 
 ## Thanks
 

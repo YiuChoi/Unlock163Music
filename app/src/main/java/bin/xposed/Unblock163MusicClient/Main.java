@@ -18,8 +18,6 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -30,6 +28,7 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
 public class Main implements IXposedHookLoadPackage {
     public static String HOOK_UTILS;
     public static String HOOK_CONSTRUCTOR;
+    public static final String VERSION_2_9_3 = "2.9.3";
     public static final String VERSION_3_2_1 = "3.2.1";
     public static final String VERSION_3_3_0 = "3.3.0";
     public static final String VERSION_3_3_1 = "3.3.1";
@@ -48,20 +47,21 @@ public class Main implements IXposedHookLoadPackage {
             VERSION = systemContext.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
             switch (VERSION) {
                 case VERSION_3_3_1:
-                    HOOK_UTILS = "com.netease.cloudmusic.utils.w";
-                    HOOK_CONSTRUCTOR="com.netease.cloudmusic.i.f";
-                    break;
                 case VERSION_3_3_0:
                     HOOK_UTILS = "com.netease.cloudmusic.utils.w";
-                    HOOK_CONSTRUCTOR="com.netease.cloudmusic.i.f";
+                    HOOK_CONSTRUCTOR = "com.netease.cloudmusic.i.f";
                     break;
                 case VERSION_3_2_1:
                     HOOK_UTILS = "com.netease.cloudmusic.utils.n";
-                    HOOK_CONSTRUCTOR="com.netease.cloudmusic.i.b";
+                    HOOK_CONSTRUCTOR = "com.netease.cloudmusic.i.b";
+                    break;
+                case VERSION_2_9_3:
+                    HOOK_UTILS = "com.netease.cloudmusic.utils.af";
+                    HOOK_CONSTRUCTOR = "com.netease.cloudmusic.h.h";
                     break;
                 default:
                     HOOK_UTILS = "com.netease.cloudmusic.utils.u";
-                    HOOK_CONSTRUCTOR="com.netease.cloudmusic.i.f";
+                    HOOK_CONSTRUCTOR = "com.netease.cloudmusic.i.f";
                     break;
             }
 
@@ -83,7 +83,7 @@ public class Main implements IXposedHookLoadPackage {
                                         || path.startsWith("/eapi/v3/playlist/detail")
                                         || path.startsWith("/eapi/v3/song/detail")) {
                                     String modified = Utility.modifyDetailApi((String) param.getResult());
-                                    Log.i("UNLOCK　NETEASE", "修改后："+modified);
+                                    Log.i("UNLOCK　NETEASE", "修改后：" + modified);
                                     param.setResult(modified);
 
                                 } else if (path.startsWith("/eapi/song/enhance/player/url")) {

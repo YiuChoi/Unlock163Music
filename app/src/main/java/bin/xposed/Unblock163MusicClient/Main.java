@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -17,6 +18,8 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -25,11 +28,11 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 
 public class Main implements IXposedHookLoadPackage {
-    public static final String packageName = "com.netease.cloudmusic";
     public static String HOOK_UTILS;
     public static String HOOK_CONSTRUCTOR;
     public static final String VERSION_3_2_1 = "3.2.1";
     public static final String VERSION_3_3_0 = "3.3.0";
+    public static final String VERSION_3_3_1 = "3.3.1";
     public static String VERSION;
 
     public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
@@ -44,6 +47,10 @@ public class Main implements IXposedHookLoadPackage {
             final Context systemContext = (Context) callMethod(activityThread, "getSystemContext");
             VERSION = systemContext.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
             switch (VERSION) {
+                case VERSION_3_3_1:
+                    HOOK_UTILS = "com.netease.cloudmusic.utils.w";
+                    HOOK_CONSTRUCTOR="com.netease.cloudmusic.i.f";
+                    break;
                 case VERSION_3_3_0:
                     HOOK_UTILS = "com.netease.cloudmusic.utils.w";
                     HOOK_CONSTRUCTOR="com.netease.cloudmusic.i.f";
@@ -76,6 +83,7 @@ public class Main implements IXposedHookLoadPackage {
                                         || path.startsWith("/eapi/v3/playlist/detail")
                                         || path.startsWith("/eapi/v3/song/detail")) {
                                     String modified = Utility.modifyDetailApi((String) param.getResult());
+                                    Log.i("UNLOCK　NETEASE", "修改后："+modified);
                                     param.setResult(modified);
 
                                 } else if (path.startsWith("/eapi/song/enhance/player/url")) {

@@ -43,9 +43,9 @@ final public class Utility {
             put("a", 64000);
         }
     };
+    final private static Pattern REX_ST = Pattern.compile("\"st\":-?\\d+");
     final private static Pattern REX_PL = Pattern.compile("\"pl\":\\d+");
     final private static Pattern REX_DL = Pattern.compile("\"dl\":\\d+");
-    final private static Pattern REX_ST = Pattern.compile("\"st\":-?\\d+");
     final private static Pattern REX_SUBP = Pattern.compile("\"subp\":\\d+");
 
     protected static boolean OVERSEA_MODE_ENABLED;

@@ -57,10 +57,12 @@ final public class Utility {
     private static boolean NEED_TO_CLEAN_DNS_CACHE;
     private static Class CLASS_utils_NeteaseMusicUtils;
     private static Constructor CONSTRUCTOR_i_f;
+    private static Constructor CONSTRUCTOR_i_f1;
 
     protected static boolean init(ClassLoader classLoader) throws NoSuchFieldException {
         CLASS_utils_NeteaseMusicUtils = XposedHelpers.findClass("com.netease.cloudmusic.utils.NeteaseMusicUtils", classLoader);
-        CONSTRUCTOR_i_f = findConstructorExact(findClass(Main.HOOK_CONSTRUCTOR, classLoader), String.class, Map.class);//3.1.4
+        CONSTRUCTOR_i_f = findConstructorExact(findClass(Main.HOOK_CONSTRUCTOR, classLoader), String.class, Map.class);
+        CONSTRUCTOR_i_f1 = findConstructorExact(findClass(Main.HOOK_CONSTRUCTOR, classLoader), String.class);
         FIELD_utils_c = findClass(Main.HOOK_UTILS, classLoader).getDeclaredField("c");//3.1.4
         FIELD_utils_c.setAccessible(true);
         return true;
@@ -158,7 +160,7 @@ final public class Utility {
     }
 
     private static String getDownloadUrl(String br, String id) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (String) XposedHelpers.callMethod(XposedHelpers.callMethod(CONSTRUCTOR_i_f.newInstance("http://music.163.com/eapi/song/enhance/player/url?br=" + br + "[" + id + "']"), "c"), "i");
+        return (String) XposedHelpers.callMethod(XposedHelpers.callMethod(CONSTRUCTOR_i_f1.newInstance("http://music.163.com/eapi/song/enhance/player/url?br=" + br + "&ids=[\"" + id + "\"]"), "c"), "i");
     }
 
     protected static boolean setDnsServer(String server) {

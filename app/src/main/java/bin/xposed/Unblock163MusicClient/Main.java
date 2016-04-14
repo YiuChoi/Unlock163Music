@@ -18,6 +18,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -32,6 +33,7 @@ public class Main implements IXposedHookLoadPackage {
     public static final String VERSION_3_2_1 = "3.2.1";
     public static final String VERSION_3_3_0 = "3.3.0";
     public static final String VERSION_3_3_1 = "3.3.1";
+    public static final String VERSION_3_3_2 = "3.3.2";
     public static String VERSION;
 
     public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
@@ -46,6 +48,7 @@ public class Main implements IXposedHookLoadPackage {
             final Context systemContext = (Context) callMethod(activityThread, "getSystemContext");
             VERSION = systemContext.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
             switch (VERSION) {
+                case VERSION_3_3_2:
                 case VERSION_3_3_1:
                 case VERSION_3_3_0:
                     HOOK_UTILS = "com.netease.cloudmusic.utils.w";
@@ -70,9 +73,10 @@ public class Main implements IXposedHookLoadPackage {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) throws Exception {
                             String url = (String) Utility.FIELD_utils_c.get(param.thisObject);
+                            XposedBridge.log(url);
                             if (url.startsWith("http://music.163.com/eapi/")) {
                                 String path = url.replace("http://music.163.com", "");
-
+                                XposedBridge.log("修改前"+param.getResult());
                                 if (path.startsWith("/eapi/batch")
                                         || path.startsWith("/eapi/song/enhance/privilege")
                                         || path.startsWith("/eapi/v1/artist")
@@ -83,11 +87,12 @@ public class Main implements IXposedHookLoadPackage {
                                         || path.startsWith("/eapi/v3/playlist/detail")
                                         || path.startsWith("/eapi/v3/song/detail")) {
                                     String modified = Utility.modifyDetailApi((String) param.getResult());
-                                    Log.i("UNLOCK　NETEASE", "修改后：" + modified);
+                                    XposedBridge.log("修改后："+ modified);
                                     param.setResult(modified);
 
                                 } else if (path.startsWith("/eapi/song/enhance/player/url")) {
                                     String modified = Utility.modifyPlayerApi(path, (String) param.getResult());
+                                    XposedBridge.log( "play修改后：" + modified);
                                     param.setResult(modified);
                                 }
                             }

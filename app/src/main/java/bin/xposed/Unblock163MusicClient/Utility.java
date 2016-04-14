@@ -47,6 +47,7 @@ final public class Utility {
     final private static Pattern REX_PL = Pattern.compile("\"pl\":\\d+");
     final private static Pattern REX_DL = Pattern.compile("\"dl\":\\d+");
     final private static Pattern REX_SUBP = Pattern.compile("\"subp\":\\d+");
+    final private static Pattern REX_FEE = Pattern.compile("\"fee\":\\d+");
 
     protected static boolean OVERSEA_MODE_ENABLED;
     protected static Field FIELD_utils_c;
@@ -69,6 +70,7 @@ final public class Utility {
         modified = REX_PL.matcher(modified).replaceAll("\"pl\":320000");
         modified = REX_DL.matcher(modified).replaceAll("\"dl\":320000");
         modified = REX_SUBP.matcher(modified).replaceAll("\"subp\":1");
+        modified = REX_FEE.matcher(modified).replaceAll("\"fee\":0");
         return modified;
     }
 

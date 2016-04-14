@@ -160,7 +160,7 @@ final public class Utility {
     }
 
     private static String getDownloadUrl(String br, String id) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (String) XposedHelpers.callMethod(XposedHelpers.callMethod(CONSTRUCTOR_i_f1.newInstance("http://music.163.com/eapi/song/enhance/player/url?br=" + br + "&ids=[\"" + id + "\"]"), "c"), "i");
+        return (String) XposedHelpers.callMethod(XposedHelpers.callMethod(CONSTRUCTOR_i_f1.newInstance("http://music.163.com/eapi/song/enhance/player/url?br=" + br + "&ids=%5B%22" + id + "%22%5D"), "c"), "i");
     }
 
     protected static boolean setDnsServer(String server) {

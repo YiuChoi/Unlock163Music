@@ -93,7 +93,7 @@ public class Main implements IXposedHookLoadPackage {
                                     String modified = Utility.modifyPlayerApi(path, (String) param.getResult());
                                     XposedBridge.log("play修改后：" + modified);
                                     param.setResult(modified);
-                                } else if (path.startsWith("/eapi/song/download")) {
+                                } else if (path.startsWith("/eapi/song/enhance/download")) {
                                     String modified = Utility.modifyDownload(path, (String) param.getResult());
                                     XposedBridge.log("downlad修改后:" + modified);
                                     param.setResult(modified);

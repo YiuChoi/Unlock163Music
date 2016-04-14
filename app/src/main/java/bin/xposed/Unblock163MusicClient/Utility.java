@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,12 +56,10 @@ final public class Utility {
     private static SimpleResolver CN_DNS_RESOVLER;
     private static boolean NEED_TO_CLEAN_DNS_CACHE;
     private static Class CLASS_utils_NeteaseMusicUtils;
-    private static Class CLASS_HOOK_UTILS;
     private static Constructor CONSTRUCTOR_i_f;
 
     protected static boolean init(ClassLoader classLoader) throws NoSuchFieldException {
         CLASS_utils_NeteaseMusicUtils = XposedHelpers.findClass("com.netease.cloudmusic.utils.NeteaseMusicUtils", classLoader);
-        CLASS_HOOK_UTILS = XposedHelpers.findClass(Main.HOOK_UTILS, classLoader);
         CONSTRUCTOR_i_f = findConstructorExact(findClass(Main.HOOK_CONSTRUCTOR, classLoader), String.class, Map.class);//3.1.4
         FIELD_utils_c = findClass(Main.HOOK_UTILS, classLoader).getDeclaredField("c");//3.1.4
         FIELD_utils_c.setAccessible(true);
@@ -109,7 +108,7 @@ final public class Utility {
             return originalContent;
     }
 
-    public static String modifyDownload(String url, String originalContent) throws JSONException {
+    public static String modifyDownload(String url, String originalContent) throws JSONException, IllegalAccessException, InvocationTargetException, InstantiationException {
         JSONObject jsonObject = new JSONObject(originalContent).getJSONObject("data");
         if (jsonObject.isNull("url")) {
             Pattern pattern = Pattern.compile("br=(\\d+)&");
@@ -158,8 +157,8 @@ final public class Utility {
         return (String) XposedHelpers.callStaticMethod(CLASS_utils_NeteaseMusicUtils, "a", fid);
     }
 
-    private static String getDownloadUrl(String br, String id) {
-        return (String) XposedHelpers.callStaticMethod(CLASS_HOOK_UTILS, "i", "http://music.163.com/eapi/song/enhance/player/url?br=" + br + "[" + id + "']");
+    private static String getDownloadUrl(String br, String id) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return (String) XposedHelpers.callMethod(XposedHelpers.callMethod(CONSTRUCTOR_i_f.newInstance("http://music.163.com/eapi/song/enhance/player/url?br=" + br + "[" + id + "']"), "c"), "i");
     }
 
     protected static boolean setDnsServer(String server) {

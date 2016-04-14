@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -76,7 +75,7 @@ public class Main implements IXposedHookLoadPackage {
                             XposedBridge.log(url);
                             if (url.startsWith("http://music.163.com/eapi/")) {
                                 String path = url.replace("http://music.163.com", "");
-                                XposedBridge.log("修改前"+param.getResult());
+                                XposedBridge.log("修改前" + param.getResult());
                                 if (path.startsWith("/eapi/batch")
                                         || path.startsWith("/eapi/song/enhance/privilege")
                                         || path.startsWith("/eapi/v1/artist")
@@ -87,12 +86,16 @@ public class Main implements IXposedHookLoadPackage {
                                         || path.startsWith("/eapi/v3/playlist/detail")
                                         || path.startsWith("/eapi/v3/song/detail")) {
                                     String modified = Utility.modifyDetailApi((String) param.getResult());
-                                    XposedBridge.log("修改后："+ modified);
+                                    XposedBridge.log("修改后：" + modified);
                                     param.setResult(modified);
 
                                 } else if (path.startsWith("/eapi/song/enhance/player/url")) {
                                     String modified = Utility.modifyPlayerApi(path, (String) param.getResult());
-                                    XposedBridge.log( "play修改后：" + modified);
+                                    XposedBridge.log("play修改后：" + modified);
+                                    param.setResult(modified);
+                                } else if (path.startsWith("/eapi/song/download")) {
+                                    String modified = Utility.modifyDownload(path, (String) param.getResult());
+                                    XposedBridge.log("downlad修改后:" + modified);
                                     param.setResult(modified);
                                 }
                             }

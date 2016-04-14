@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.robv.android.xposed.XposedHelpers;
@@ -54,10 +55,12 @@ final public class Utility {
     private static SimpleResolver CN_DNS_RESOVLER;
     private static boolean NEED_TO_CLEAN_DNS_CACHE;
     private static Class CLASS_utils_NeteaseMusicUtils;
+    private static Class CLASS_HOOK_UTILS;
     private static Constructor CONSTRUCTOR_i_f;
 
     protected static boolean init(ClassLoader classLoader) throws NoSuchFieldException {
         CLASS_utils_NeteaseMusicUtils = XposedHelpers.findClass("com.netease.cloudmusic.utils.NeteaseMusicUtils", classLoader);
+        CLASS_HOOK_UTILS = XposedHelpers.findClass(Main.HOOK_UTILS, classLoader);
         CONSTRUCTOR_i_f = findConstructorExact(findClass(Main.HOOK_CONSTRUCTOR, classLoader), String.class, Map.class);//3.1.4
         FIELD_utils_c = findClass(Main.HOOK_UTILS, classLoader).getDeclaredField("c");//3.1.4
         FIELD_utils_c.setAccessible(true);
@@ -106,6 +109,18 @@ final public class Utility {
             return originalContent;
     }
 
+    public static String modifyDownload(String url, String originalContent) throws JSONException {
+        JSONObject jsonObject = new JSONObject(originalContent).getJSONObject("data");
+        if (jsonObject.isNull("url")) {
+            Pattern pattern = Pattern.compile("br=(\\d+)&");
+            Matcher matcher = pattern.matcher(url);
+            matcher.find();
+            return getDownloadUrl(matcher.group(1), url.substring(url.lastIndexOf("=") + 1));
+        } else {
+            return originalContent;
+        }
+    }
+
     private static JSONObject[] getOneQualityFromSongId(List<Long> songIds, int expectBitrate) throws JSONException, IllegalAccessException, InstantiationException, InvocationTargetException {
         JSONArray c = new JSONArray();
         for (long songId : songIds) {
@@ -141,6 +156,10 @@ final public class Utility {
 
     private static String generateUrl(long fid) {
         return (String) XposedHelpers.callStaticMethod(CLASS_utils_NeteaseMusicUtils, "a", fid);
+    }
+
+    private static String getDownloadUrl(String br, String id) {
+        return (String) XposedHelpers.callStaticMethod(CLASS_HOOK_UTILS, "i", "http://music.163.com/eapi/song/enhance/player/url?br=" + br + "[" + id + "']");
     }
 
     protected static boolean setDnsServer(String server) {

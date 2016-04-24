@@ -27,6 +27,7 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
 
 public class Main implements IXposedHookLoadPackage {
     public static String HOOK_UTILS;
+    public static boolean OPEN = true;
     public static String HOOK_CONSTRUCTOR;
     public static final String VERSION_2_9_3 = "2.9.3";
     public static final String VERSION_3_2_1 = "3.2.1";
@@ -69,13 +70,14 @@ public class Main implements IXposedHookLoadPackage {
 
             Utility.init(lpparam.classLoader);
             findAndHookMethod(HOOK_UTILS, lpparam.classLoader, "i", new XC_MethodHook() { //3.1.4
+
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) throws Exception {
                             String url = (String) Utility.FIELD_utils_c.get(param.thisObject);
                             XposedBridge.log(url);
                             if (url.startsWith("http://music.163.com/eapi/")) {
                                 String path = url.replace("http://music.163.com", "");
-                                XposedBridge.log("修改前" + param.getResult());
+                                //XposedBridge.log("修改前" + param.getResult());
                                 if (path.startsWith("/eapi/batch")
                                         || path.startsWith("/eapi/song/enhance/privilege")
                                         || path.startsWith("/eapi/v1/artist")
@@ -91,17 +93,30 @@ public class Main implements IXposedHookLoadPackage {
 
                                 } else if (path.startsWith("/eapi/song/enhance/player/url")) {
                                     String modified = Utility.modifyPlayerApi(path, (String) param.getResult());
-                                    XposedBridge.log("play修改后：" + modified);
+                                    //XposedBridge.log("play修改后：" + modified);
                                     param.setResult(modified);
-                                } else if (path.startsWith("/eapi/song/enhance/download")) {
-                                    String modified = Utility.modifyDownload(path, (String) param.getResult());
-                                    XposedBridge.log("downlad修改后:" + modified);
+                                } else if (path.startsWith("/eapi/song/enhance/download/url")) {
+                                    String modified = Utility.modifyDownloadApi(path, (String) param.getResult());
+                                    //XposedBridge.log("down修改后:" + modified);
                                     param.setResult(modified);
                                 }
                             }
                         }
                     }
             );
+            //参数1：storage/sdcard1/netease/cloudmusic/Cache/Download/a1a16b9e8709767b9c9f5bc6a6a089cc
+            //期待的返回值：a1a16b9e8709767b9c9f5bc6a6a089cc
+            findAndHookMethod(Utility.CLASS_utils_NeteaseMusicUtils, "a", String.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    String path = ((String) param.args[0]);
+                    if (path.contains("/netease/cloudmusic/Cache/Download/")) {
+                        String md5 = Utility.getLastPartOfString(path, "/");
+                        param.setResult(md5);
+                    }
+                }
+            });
+
 
             XSharedPreferences xSharedPreferences = new XSharedPreferences(BuildConfig.APPLICATION_ID);
             Utility.OVERSEA_MODE_ENABLED = xSharedPreferences.getBoolean(Settings.OVERSEA_MODE_KEY, Settings.OVERSEA_MODE_DEFAULT);

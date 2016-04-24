@@ -5,6 +5,18 @@
         android:summary="@string/pref_oversea_mode_description"
         android:title="@string/pref_oversea_mode_title" />
 
+    <Preference android:title="支付宝捐赠">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://qr.alipay.com/apoy1zw1o2xpc7915d" />
+    </Preference>
+
+    <Preference android:title="关于">
+        <intent
+        android:action="android.intent.action.VIEW"
+        android:data="http://caiyao.name/releases" />
+    </Preference>
+
     <bin.xposed.Unblock163MusicClient.ui.IPv4EditTextPreference
         android:defaultValue="219.141.140.10"
         android:dependency="OVERSEA_MODE"

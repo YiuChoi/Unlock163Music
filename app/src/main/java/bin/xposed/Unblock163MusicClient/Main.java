@@ -27,7 +27,7 @@ import static de.robv.android.xposed.XposedHelpers.findClass;
 
 public class Main implements IXposedHookLoadPackage {
     public static String HOOK_UTILS;
-    public static boolean OPEN = true;
+    public static boolean OPEN = false;
     public static String HOOK_CONSTRUCTOR;
     public static final String VERSION_2_9_3 = "2.9.3";
     public static final String VERSION_3_2_1 = "3.2.1";

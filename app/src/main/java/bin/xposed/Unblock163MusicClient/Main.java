@@ -34,6 +34,7 @@ public class Main implements IXposedHookLoadPackage {
     public static final String VERSION_3_3_0 = "3.3.0";
     public static final String VERSION_3_3_1 = "3.3.1";
     public static final String VERSION_3_3_2 = "3.3.2";
+    public static final String VERSION_3_4_0 = "3.4.0";
     public static String VERSION;
 
     public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
@@ -48,6 +49,10 @@ public class Main implements IXposedHookLoadPackage {
             final Context systemContext = (Context) callMethod(activityThread, "getSystemContext");
             VERSION = systemContext.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
             switch (VERSION) {
+                case VERSION_3_4_0:
+                    HOOK_UTILS = "com.netease.cloudmusic.utils.x";
+                    HOOK_CONSTRUCTOR = "com.netease.cloudmusic.i.f";
+                    break;
                 case VERSION_3_3_2:
                 case VERSION_3_3_1:
                 case VERSION_3_3_0:

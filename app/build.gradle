@@ -9,8 +9,8 @@ android {
         applicationId "name.caiyao.neteasemusic"
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 9
+        versionName "1.0.9"
     }
     buildTypes {
         release {
